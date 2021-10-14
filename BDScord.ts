@@ -202,7 +202,6 @@ events.playerJoin.on((ev) => {
 
     webhook.send(new WebHook.MessageBuilder()
         .setName(ev.player.getName())
-        .setAvatar(ev.player.getSkin().skinImage.imageFormat)
         .setDescription(`**${ev.player.getName()} Joined the game**`)
         .setColor("#456789"));
 });
