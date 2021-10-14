@@ -1,0 +1,35 @@
+{
+  "name": "@bdsx/single-BDScord",
+  "version": "0.0.3",
+  "description": "A simple chat bridge and much more",
+  "main": "index.js",
+  "keywords": [
+    "Minecraft Bedrock",
+    "Bedrock",
+    "BDSX",
+    "chat bridge",
+    "discord"
+  ],
+  "author": "! Pixel",
+  "license": "ISC",
+  "bdsxPlugin": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prepare": "tsc || exit 0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.20.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "bdsx": "file:../bdsx",
+    "eslint": "^7.30.0",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "discord.js": "^11.6.0",
+    "jimp": "^0.6.4",
+    "webhook-discord": "^3.7.8",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
