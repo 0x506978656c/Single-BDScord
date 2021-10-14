@@ -1,7 +1,9 @@
-# What is BDScord
+# What is BDScord - 1.17.11.01
 BDScord was intended to provide a simple chat bridge that would make playing on servers more interesting and more enjoyable. Typically servers can sometimes get lonely and having a chat bridge makes it fun and entertaining. This is not just a chat bridge but it also comprises specialised tools for scoreboards and more.
 
 # Setting up BDScord
+
+[Download for 1.17.11.01 BDSX can be found here](https://github.com/bdsx/bdsx/tree/f80d6460da423e5efa2b55105c8e070ed6f05f48)
 
 BDScord is a plugin designed to run with [BDSX](https://github.com/bdsx/bdsx). In the technical community this can also be run in tandem with [Trapdoor](https://github.com/hhhxiao/TrapDoor), to install follow these steps:
 
