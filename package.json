@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "discord.js": "^11.6.0",
-    "jimp": "^0.6.4",
     "webhook-discord": "^3.7.8",
     "xmlhttprequest": "^1.8.0"
   }
