@@ -16,13 +16,6 @@ import {Config} from "./config";
 import {Actor} from 'bdsx/bds/actor';
 import {sendHelp, sendSpecical} from "./MessageManager";
 import {nethook} from "bdsx/nethook";
-import 'jimp';
-//import Jimp = require("jimp");
-// @ts-ignore
-import {getBuffer, getBufferAsync} from "jimp";
-
-import Jimp = require("jimp");
-
 
 export const WebHook = require("webhook-discord")
 export const webhook = new WebHook.Webhook(Config.webhook_url)
