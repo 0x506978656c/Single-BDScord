@@ -8,14 +8,14 @@ BDScord was intended to provide a simple chat bridge that would make playing on 
 # Features
 
  * Discord - Mc chat bridge 
- * MC to Discord emojie replacer. This works for any server. for example if u have a emote added to the server that u are running the bot from such as the emote `:sad:`.
-   By typeing the emojie name without the Emojie ID or other anoying required formats in game, BDScord will auto convert it to the emojie in discord.
- * Server managment commands in discord with whitelist commands and commands to stop the server
+ * MC to Discord emoji replacer. This works for any server. for example, if u have a emote added to the server that u are running the bot from such as the emote `:sad:`.
+   By typing the emoji name without the Emoji ID or other annoying required formats in game, BDScord will auto convert it to the emoji in discord.
+ * Server management commands in discord with whitelist commands and commands to stop the server
  * Blocks broken, Deaths and Mobs Killed counters 
  * Player leave and Join messages
  * list which players are online 
  * blame command 
-
+ 
 # Setting up BDScord
 
 [Download for 1.17.11.01 BDSX can be found here](https://github.com/bdsx/bdsx/tree/f80d6460da423e5efa2b55105c8e070ed6f05f48)
