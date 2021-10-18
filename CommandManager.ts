@@ -70,3 +70,20 @@ command.register("printhere", "Alerts other players to your position").overload(
     tellAllRaw(`§b[${player.getName()}]§r @ ${s}`)
 }, {});
 
+command.register("vc", "Lists the people who are in vc in the server").overload((p, o) => {
+    let player = o.getEntity();
+    if (!player) return;
+    let packet = TextPacket.create();
+    const channels = channel.guild.channels.filter(c => c.type === 'voice');
+    for (const [channelID, channel] of channels) {
+        // @ts-ignore
+        if (channel.members.size !== 0) {
+            packet.message += `§3Current people in #${channel.name}§r:\n`
+        }
+        for (const [memberID, member] of channel.members) {
+            packet.message += ` - ${member.user.username}\n`
+        }
+    }
+    player.sendPacket(packet);
+    packet.dispose();
+}, {});
