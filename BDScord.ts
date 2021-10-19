@@ -35,44 +35,11 @@ export const connectionList = new Map<NetworkIdentifier, string>();
 // @ts-ignore
 events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier, packetId) => {
     const connreq = ptr.connreq;
-    if (connreq === null) return; // wrong client
-    /*    Buffer.from(connreq.getJson()!.get("SkinData").value(), "base64")
-        let width = connreq.getJson()!.get("SkinImageWidth").value()
-        let height = connreq.getJson()!.get("SkinImageHeight").value()
-
-        let image = new Jimp(width, height, (err: Error, image: any) => {
-            if (err) throw err;
-            let offset = 0;
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-
-                //    let buffer = new Buffer();
-                    let r = Buffer.readUInt8(offset).toString(16);
-                    let g = Buffer.readUInt8(offset + 1).toString(16);
-                    let b = buffer.readUInt8(offset + 2).toString(16);
-                    let a = buffer.readUInt8(offset + 3).toString(16);
-                    offset += 4;
-                    image.setPixelColor(parseInt(`0x${r}${g}${b}${a}`, 16), x, y);
-                }
-            }
-
-            image.write("test.png", (err: Error) => {
-                if (err) throw err;
-            })
-        });
-    */
+    if (connreq === null) return; 
     const cert = connreq.cert;
     console.log(`Connection: ${cert.getId()}>  XUID=${cert.getXuid()}, OS=${DeviceOS[connreq.getDeviceOS()] || 'UNKNOWN'}`);
     if (cert.getId()) connectionList.set(networkIdentifier, cert.getId());
 });
-
-
-/**
- * TODO:restart
- * TODO: skins for pfps
- * TODO: waypoint command
- * TODO: ops
- */
 
 let whitelistArgs: string[] = ["on", "off", "add", "remove", "list"];
 client.on("message", (message) => {
@@ -235,9 +202,7 @@ events.packetBefore(MinecraftPacketIds.Text).on((ev) => {
 
 system.listenForEvent("minecraft:entity_death", (ev) => {
     try {
-        if (ev.data.entity.__identifier__ === null)
-            return;
-        if (!ev.data.entity)
+        if (ev.data.entity.__identifier__ === null || !ev.data.entity || ev.data.entity.__identifier__ !== "minecraft:player")
             return;
         system.executeCommand(`scoreboard players add " ${system.getComponent(ev.data.entity, "minecraft:nameable")!.data.name}" "Deaths" 1`, () => {
         });
@@ -246,7 +211,7 @@ system.listenForEvent("minecraft:entity_death", (ev) => {
 })
 
 system.listenForEvent("minecraft:entity_death", (ev) => {
-    try {
+    try {        
         if (ev.data.killer.__identifier__ == "minecraft:player") {
             system.executeCommand(`scoreboard players add " ${system.getComponent(ev.data.killer, "minecraft:nameable")!.data.name}" "Mobs Killed" 1`, () => {
             });
@@ -257,12 +222,12 @@ system.listenForEvent("minecraft:entity_death", (ev) => {
         let playerName = system.getComponent(ev.data.entity, "minecraft:nameable")!.data.name
         let killer = ev.data.killer
         if (!ev.data.killer) {
-            sendMessage(`${playerName} died`, playerName)
+            sendMessage(`${playerName} died`, playerName);
         } else if (killer.__identifier__ == "minecraft:player") {
             let killerName = system.getComponent(killer, "minecraft:nameable")!.data.name
-            sendMessage(`${playerName} was slain by ${killerName}`, playerName)
+            sendMessage(`${playerName} was slain by ${killerName}`, playerName);
         } else {
-            sendMessage(`${playerName} was slain by a ${killer.__identifier__.substring(10)}`, playerName)//`a ${killer.__identifier__.substring(10)} killed ${playerName}`
+            sendMessage(`${playerName} was slain by a ${killer.__identifier__.substring(10)}`, playerName);
         }
     }
 
