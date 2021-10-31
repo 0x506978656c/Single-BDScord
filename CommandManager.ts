@@ -13,31 +13,57 @@ import {readFileSync, writeFileSync} from "fs";
 import path = require("path");
 import {fsutil} from "bdsx/fsutil";
 
-
 command.register('waypoint', 'waypoints around the server').overload(({target}, origin) => {
     let player = origin.getEntity();
     if (!player) return;
-    if (!origin.getEntity()?.isPlayer()) return;
     let a: string[] = target.text.split(" ");
     let packet = TextPacket.create();
-    let waypoint = JSON.parse(readFileSync(path.join(fsutil.projectPath, "/plugins/single-BDScord/waypoints.json")).toString());
+    let wayPath = path.join(fsutil.projectPath, "/plugins/single-BDScord/waypoints.json");
+    let waypoint = JSON.parse(readFileSync(wayPath).toString());
+    if (a.length < 6) {
+        packet.message = WaypintError();
+        player.sendPacket(packet);
+        packet.dispose();
+        return;
+    }
     switch (a[0].toLowerCase()) {
         case "add": {
-            //  0    1      2      3       4               5
-            // add <posx> <posy> <posz> <formattedName> <formalName>
             waypoint[`${a[4]}`] = {
                 formalName: `${a.splice(5).join(' ')}`,
                 Dim: `${player.getDimensionId()}`,
                 Pos: `${a[1]} ${a[2]} ${a[3]}`
             }
-            writeFileSync(path.join(fsutil.projectPath, "/plugins/single-BDScord/waypoints.json"), JSON.stringify(waypoint, null, 2))
+            writeFileSync(wayPath, JSON.stringify(waypoint, null, 2))
             packet.message = "§aWaypoint was successfully added";
+            player.sendPacket(packet);
+            packet.dispose();
             break;
         }
         case "remove": {
             delete waypoint[`${a[1]}`];
-            writeFileSync(path.join(fsutil.projectPath, "/plugins/single-BDScord/waypoints.json"), JSON.stringify(waypoint, null, 2))
+            writeFileSync(wayPath, JSON.stringify(waypoint, null, 2))
             packet.message = "§aWaypoint was successfully removed"
+            player.sendPacket(packet);
+            packet.dispose();
+            break;
+        }
+        case "list": {
+            packet.message += "List of all waypoints:";
+            for (let waya in waypoint) {
+                switch (waypoint[waya].Dim) {
+                    case 0:
+                        packet.message += `\n§a${waypoint[waya].formalName} @ Overworld: ${waypoint[waya].Pos}§r`
+                        break;
+                    case 1:
+                        packet.message += `\n§4${waypoint[waya].formalName} @ Nether: ${waypoint[waya].Pos}§r`
+                        break;
+                    case 2:
+                        packet.message += `\n§e${waypoint[waya].formalName} @ End: ${waypoint[waya].Pos}§r`
+                        break;
+                }
+            }
+            player.sendPacket(packet);
+            packet.dispose();
             break;
         }
         case "nearby": {
@@ -63,6 +89,8 @@ command.register('waypoint', 'waypoints around the server').overload(({target}, 
                     packet.message += `§e${waypoint[closestIndex].formalName}:\nEnd: ${waypoint[closestIndex].Pos}§r`
                     break;
             }
+            player.sendPacket(packet);
+            packet.dispose();
             break;
         }
         case "find": {
@@ -78,19 +106,29 @@ command.register('waypoint', 'waypoints around the server').overload(({target}, 
                     packet.message += `§eEnd: ${waypoint[`${a[1]}`].Pos}§r`
                     break;
             }
+            player.sendPacket(packet);
+            packet.dispose();
             break;
         }
         default: {
-            console.log("unknown function")
+            packet.message = WaypintError();
+            player.sendPacket(packet);
+            packet.dispose();
         }
-    }
-    player.sendPacket(packet);
-    packet.dispose();
 
+    }
 }, {
     target: CommandRawText
 });
 
+function WaypintError() {
+    return `§4Error in Waypoint command:
+         Arguments:
+        -add <posx> <posy> <posz> <formattedName> <formalName> 
+        -remove <formattedName>
+        -nearby
+        -list§4`
+}
 command.register("stopall", "Stops the server").overload((p, o) => {
     let player = o.getEntity();
     if (!player) return;
