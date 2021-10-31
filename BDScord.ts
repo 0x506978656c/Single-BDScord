@@ -13,10 +13,13 @@ import {bedrockServer} from "bdsx/launcher";
 import {serverInstance} from "bdsx/bds/server";
 import {TextPacket} from 'bdsx/bds/packets';
 import {Config} from "./config";
-import {Actor} from 'bdsx/bds/actor';
 import {sendHelp, sendSpecical} from "./MessageManager";
-import {nethook} from "bdsx/nethook";
+import os = require('os');
+// @ts-ignore
+import osu = require('node-os-utils');
 
+
+const process = require('process');
 export const WebHook = require("webhook-discord")
 export const webhook = new WebHook.Webhook(Config.webhook_url)
 
@@ -26,24 +29,19 @@ client.login(Config.token);
 export const system = server.registerSystem(0, 0);
 export let channel: TextChannel;
 
-function sendMessage(content: string, playerName: string) {
-    const msg = new WebHook.MessageBuilder().setName(playerName).setText(content);
-    webhook.send(msg);
-}
-
 export const connectionList = new Map<NetworkIdentifier, string>();
 // @ts-ignore
 events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier, packetId) => {
     const connreq = ptr.connreq;
-    if (connreq === null) return; 
+    if (connreq === null) return; // wrong client
     const cert = connreq.cert;
     console.log(`Connection: ${cert.getId()}>  XUID=${cert.getXuid()}, OS=${DeviceOS[connreq.getDeviceOS()] || 'UNKNOWN'}`);
     if (cert.getId()) connectionList.set(networkIdentifier, cert.getId());
 });
 
+
 let whitelistArgs: string[] = ["on", "off", "add", "remove", "list"];
 client.on("message", (message) => {
-
     if (message.channel.id !== channel.id)
         return;
     if (message.author.bot)
@@ -88,7 +86,6 @@ client.on("message", (message) => {
                 sendHelp()
                 break;
             }
-
             case "scoreboard": {
                 if (a[1] === "stats") {
                     let objectiveNames = serverInstance.minecraft.getLevel().getScoreboard().getObjectiveNames()
@@ -108,6 +105,11 @@ client.on("message", (message) => {
     }
 
 });
+
+function sendMessage(content: string, playerName: string) {
+    const msg = new WebHook.MessageBuilder().setName(playerName).setText(content);
+    webhook.send(msg);
+}
 
 function getScore(target: String, objectives: string): null | number {
     let level = serverInstance.minecraft.getLevel();
@@ -145,7 +147,7 @@ function list() {
 }
 
 client.on("ready", () => {
-    console.log('\x1b[32m', 'Connected Discord Bot');
+    console.log('\x1b[32m', 'Connected Discord Bot\x1a');
     const tmpChannel = client.channels.get(Config.channel);
     if (!tmpChannel)
         throw new Error("Can't get the channel from discord");
@@ -160,13 +162,13 @@ system.listenForEvent("minecraft:player_destroyed_block", (ev) => {
         });
     }
 })
+
 events.serverClose.on(() => {
     sendSpecical("Server Info:", "**The Server has shutdown!**", "#9b1010", false);
     client.destroy();
 });
 
 events.playerJoin.on((ev) => {
-
     webhook.send(new WebHook.MessageBuilder()
         .setName(ev.player.getName())
         .setDescription(`**${ev.player.getName()} Joined the game**`)
@@ -182,7 +184,17 @@ events.networkDisconnected.on(networkIdentifier => {
         .setColor("#456789"));
 });
 
-events.packetBefore(MinecraftPacketIds.Text).on((ev) => {
+events.packetBefore(MinecraftPacketIds.Text).on((ev, networkIdentifier) => {
+    if (ev.message.includes("@everyone") || ev.message.includes("@here")) {
+        let packet = TextPacket.create();
+        packet.message = `§4This message contains a §e@everyone§r or §e@here§r and has been blocked from being sent`
+        for (const i of serverInstance.minecraft.getLevel().players.toArray()) {
+            if (i.getName() === connectionList.get(networkIdentifier))
+                i.sendPacket(packet);
+        }
+        packet.dispose()
+        return;
+    }
     let emojiesArray: string[] = channel.guild.emojis.map(e => e.toString()).join(" ").split(' ');
     let a: string = ev.message;
     let length = emojiesArray.length;
@@ -200,6 +212,7 @@ events.packetBefore(MinecraftPacketIds.Text).on((ev) => {
     sendMessage(a, ev.name);
 })
 
+
 system.listenForEvent("minecraft:entity_death", (ev) => {
     try {
         if (ev.data.entity.__identifier__ === null || !ev.data.entity || ev.data.entity.__identifier__ !== "minecraft:player")
@@ -211,7 +224,8 @@ system.listenForEvent("minecraft:entity_death", (ev) => {
 })
 
 system.listenForEvent("minecraft:entity_death", (ev) => {
-    try {        
+    try {
+
         if (ev.data.killer.__identifier__ == "minecraft:player") {
             system.executeCommand(`scoreboard players add " ${system.getComponent(ev.data.killer, "minecraft:nameable")!.data.name}" "Mobs Killed" 1`, () => {
             });
@@ -222,12 +236,12 @@ system.listenForEvent("minecraft:entity_death", (ev) => {
         let playerName = system.getComponent(ev.data.entity, "minecraft:nameable")!.data.name
         let killer = ev.data.killer
         if (!ev.data.killer) {
-            sendMessage(`${playerName} died`, playerName);
+            sendMessage(`${playerName} died`, playerName)
         } else if (killer.__identifier__ == "minecraft:player") {
             let killerName = system.getComponent(killer, "minecraft:nameable")!.data.name
-            sendMessage(`${playerName} was slain by ${killerName}`, playerName);
+            sendMessage(`${playerName} was slain by ${killerName}`, playerName)
         } else {
-            sendMessage(`${playerName} was slain by a ${killer.__identifier__.substring(10)}`, playerName);
+            sendMessage(`${playerName} was slain by a ${killer.__identifier__.substring(10)}`, playerName)//`a ${killer.__identifier__.substring(10)} killed ${playerName}`
         }
     }
 
