@@ -31,7 +31,7 @@ command.register('waypoint', 'waypoints around the server').overload(({target}, 
             waypoint[`${a[4]}`] = {
                 formalName: `${a.splice(5).join(' ')}`,
                 Dim: `${player.getDimensionId()}`,
-                Pos: `${a[1]} ${a[2]} ${a[3]}`
+                Pos: `${(a[1] === "~" ? player.getPosition().x : a[1])} ${(a[2] === "~" ? player.getPosition().y : a[2])} ${(a[3] === "~" ? player.getPosition().z : a[3])}`
             }
             writeFileSync(wayPath, JSON.stringify(waypoint, null, 2))
             packet.message = "§aWaypoint was successfully added";
