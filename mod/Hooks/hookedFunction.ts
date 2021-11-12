@@ -1,3 +1,9 @@
+/**
+ * BDScord Plugin
+ * Developed by ! Pixel
+ *
+ */
+
 import {Actor, ActorRuntimeID} from "bdsx/bds/actor";
 import {Level} from "bdsx/bds/level";
 import {bool_t} from "bdsx/nativetype";

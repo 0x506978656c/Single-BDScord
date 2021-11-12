@@ -1,3 +1,9 @@
+/**
+ * BDScord Plugin
+ * Developed by ! Pixel
+ *
+ */
+
 import {events} from "bdsx/event";
 import {MinecraftPacketIds} from "bdsx/bds/packetids";
 import {serverInstance} from "bdsx/bds/server";

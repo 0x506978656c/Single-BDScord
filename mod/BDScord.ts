@@ -26,7 +26,7 @@ export const system = server.registerSystem(0, 0);
 export let channel: TextChannel;
 
 export const connectionList = new Map<NetworkIdentifier, string>();
-events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier, packetId) => {
+events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier,packetId) => {
     const connreq = ptr.connreq;
     if (connreq === null) return;
     const cert = connreq.cert;

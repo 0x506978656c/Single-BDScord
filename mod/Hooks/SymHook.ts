@@ -1,3 +1,9 @@
+/**
+ * BDScord Plugin
+ * Developed by ! Pixel
+ *
+ */
+
 import {ProcHacker} from "bdsx/prochacker";
 import {UNDNAME_NAME_ONLY} from "bdsx/dbghelp";
 import {pdb} from "bdsx/core";

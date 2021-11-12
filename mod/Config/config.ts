@@ -1,3 +1,8 @@
+/**
+ * BDScord Plugin
+ * Developed by ! Pixel
+ *
+ */
 import path = require("path");
 import {fsutil} from "bdsx/fsutil";
 
