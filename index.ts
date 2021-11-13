@@ -5,8 +5,7 @@
  */
 import {events} from "bdsx/event";
 events.serverOpen.on(() => {
-    require('./config');
-
+    require('mod/Config/config');
 });
 
 
