@@ -29,6 +29,7 @@ fsutil.readFile(x).then((data) => {
     Config.webhook_url = config.webhook_url;
     Config.bot_prefix = config.bot_prefix;
     require("../BDScord");
+    require("../Hooks/hookedFunction")
     require("../Events/scheduling")
     require("../Commands/CommandManager");
 });
