@@ -4,7 +4,7 @@
  */
 
 // @ts-ignore
-import {channel, webhook, WebHook} from "./BDScord";
+import {channel, webhook, WebHook} from "../BDScord";
 import {TextPacket} from "bdsx/bds/packets";
 import {serverInstance} from "bdsx/bds/server";
 import {Config} from "../Config/config";

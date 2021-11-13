@@ -4,8 +4,11 @@
  *
  */
 import {events} from "bdsx/event";
+import * as path from "path";
+import {fsutil} from "bdsx/fsutil";
+
 events.serverOpen.on(() => {
-    require('mod/Config/config');
+    require(path.join(fsutil.projectPath, "/plugins/single-BDScord/mod/Config/config"))
 });
 
 

@@ -28,7 +28,7 @@ fsutil.readFile(x).then((data) => {
     Config.server_manager_roleID = config.server_manager_roleID;
     Config.webhook_url = config.webhook_url;
     Config.bot_prefix = config.bot_prefix;
-    require("./BDScord");
-    require("./scheduling")
-    require("./CommandManager");
+    require("../BDScord");
+    require("../Events/scheduling")
+    require("../Commands/CommandManager");
 });
