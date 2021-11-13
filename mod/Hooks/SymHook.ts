@@ -7,11 +7,15 @@
 import {ProcHacker} from "bdsx/prochacker";
 import {UNDNAME_NAME_ONLY} from "bdsx/dbghelp";
 import {pdb} from "bdsx/core";
+import * as path from "path";
+import {fsutil} from "bdsx/fsutil";
 
 
-const cmds = [
-    "Level::getRuntimeEntity"
+const symbols = [
+    "Level::getRuntimeEntity",
+    "Explosion::explode"
 ];
 
-export const symHook = ProcHacker.load('../pdbCache.ini', cmds, UNDNAME_NAME_ONLY);
+
+export const symHook = ProcHacker.load(path.join(fsutil.projectPath, "/plugins/single-BDScord/mod/Hooks/PDBCache.ini"), symbols, UNDNAME_NAME_ONLY);
 pdb.close()
