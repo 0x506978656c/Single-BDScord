@@ -44,29 +44,24 @@ events.networkDisconnected.on(networkIdentifier => {
         .setColor("#456789"));
 });
 
-
+/*
+//Took this out for now as i havent finished it yet
 events.packetBefore(MinecraftPacketIds.Interact).on((ev, networkIdentifier) => {
     let actor: Actor = getRuntimeEntity(serverInstance.minecraft.getLevel(), ev.actorId, false);
-
     serverInstance.minecraft.something
     console.log(actor.toString())
-
     //  actor.getIdentifier()
     //  tellAllRaw(JSON.stringify(actor.toJSON()))
     /*
     const getRuntimeEntity = hacker.hooking('Level::getRuntimeEntity',
         ActorRuntimeID,bool_t)(
         (Level,ev.actorId)=>{
-
             //sendText(gamemode.actor.getNetworkIdentifier(), `${item.getName()} using at ${blockpos.x} ${blockpos.y} ${blockpos.z}`);
             return getRuntimeEntity(ev.actorId,false);
         });
-
     */
-
-
 })
-
+*/
 events.packetBefore(MinecraftPacketIds.Text).on((ev, networkIdentifier) => {
     if (ev.message.includes("@everyone") || ev.message.includes("@here")) {
         let packet = TextPacket.create();
