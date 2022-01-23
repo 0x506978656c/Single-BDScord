@@ -99,9 +99,9 @@ client.on("message", (message) => {
                     let objectiveNames = serverInstance.minecraft.getLevel().getScoreboard().getObjectiveNames()
                     let s: string = "";
                     for (let i = 0; i < objectiveNames.length; i++) {
-                        s += `\n ${objectiveNames[i]}: ${getScore(` ${a.slice(2)}`, `${objectiveNames[i]}`)}`
+                        s += `\n ${objectiveNames[i]}: ${getScore(` ${a.slice(2).join(' ')}`, `${objectiveNames[i]}`)}`
                     }
-                    sendSpecical(`Stats for ${a[2]}`, s, "#14a7e5", false);
+                    sendSpecical(`Stats for ${a.slice(2).join(' ')}`, s, "#14a7e5", false);
                 }
                 break;
             }
@@ -126,6 +126,8 @@ function getScore(target: String, objectives: string): null | number {
     if (obj === null) return null;
     // @ts-ignore
     let id = score.getFakePlayerScoreboardId(target);
+    console.log(target)
+
     return obj.getPlayerScore(id).value;
 }
 
