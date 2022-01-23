@@ -13,7 +13,6 @@ import {bedrockServer} from "bdsx/launcher";
 import {serverInstance} from "bdsx/bds/server";
 import {Config} from "./Config/config";
 import {sendHelp, sendSpecical, tellAllRaw} from "./ChatManager/MessageManager";
-import {attemptReconnect, fakeplayer, wsp} from "./FakePlayer/FakePlayer";
 // @ts-ignore
 import osu = require('node-os-utils');
 
@@ -44,11 +43,6 @@ client.on("ready", async () => {
         throw new Error("\x1b[31m[BDScord main] Error: Unable to set channel\x1b[0m");
     channel = tmpChannel as TextChannel;
     sendSpecical("Server Info:", "**The server has started up!**", "#31b40c", false);
-  /*  attemptReconnect().then(() => {
-        wsp.sendRequest({"type": "connect_all"}).then((response: any,err: any) => {
-            sendSpecical("Response", `${JSON.stringify(response)}`, "#10869b", false);
-        });
-    })*/
 });
 
 let whitelistArgs: string[] = ["on", "off", "add", "remove", "list"];

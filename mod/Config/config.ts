@@ -5,9 +5,8 @@
  */
 import path = require("path");
 import {fsutil} from "bdsx/fsutil";
-
-const x = path.join(fsutil.projectPath, "/plugins/single-BDScord/mod config/BDScordConfig.json");
-console.log('\x1b[36m%s\x1b[0m', `BDScord config file has been loaded: ${x}`);
+const configPath = path.join(fsutil.projectPath, "/plugins/single-BDScord/mod config/BDScordConfig.json");
+console.log('\x1b[36m%s\x1b[0m', `BDScord config file has been loaded: ${configPath}`);
 
 export let Config = {
     server_name: "",
@@ -19,7 +18,7 @@ export let Config = {
     bot_prefix: ""
 };
 
-fsutil.readFile(x).then((data) => {
+fsutil.readFile(configPath).then((data) => {
     let config = JSON.parse(data);
     Config.server_name = config.server_name;
     Config.token = config.token;
@@ -28,8 +27,9 @@ fsutil.readFile(x).then((data) => {
     Config.server_manager_roleID = config.server_manager_roleID;
     Config.webhook_url = config.webhook_url;
     Config.bot_prefix = config.bot_prefix;
+
     require("../BDScord");
-    require("../Hooks/hookedFunction")
-    require("../Events/scheduling")
+    require("../Hooks-Tools/hookedFunction");
+    require("../Events/scheduling");
     require("../Commands/CommandManager");
 });

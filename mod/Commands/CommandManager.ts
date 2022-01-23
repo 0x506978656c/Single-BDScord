@@ -1,135 +1,34 @@
 /**
- * BDScord - ! Pixel
+ * BDScord Plugin
+ * Developed by ! Pixel
  *
  */
+
 import {Vec3} from "bdsx/bds/blockpos";
 import {TextPacket} from "bdsx/bds/packets";
 import {command} from "bdsx/command";
 import {bedrockServer} from "bdsx/launcher";
 import {CommandRawText} from 'bdsx/bds/command';
 import {tellAllRaw} from "../ChatManager/MessageManager";
-import {readFileSync, writeFileSync} from "fs";
+import {channel} from "../BDScord";
 // @ts-ignore
 import path = require("path");
-import {fsutil} from "bdsx/fsutil";
-import {channel} from "../BDScord";
+const MersenneTwister = require('mersenne-twister');
 
-command.register('waypoint', 'waypoints around the server').overload(({target}, origin) => {
-    let player = origin.getEntity();
+command.register("isslime", "Test's if the chunk that the player is standing in is a slime chunk").overload((p, o) => {
+    let player = o.getEntity();
     if (!player) return;
-    let a: string[] = target.text.split(" ");
     let packet = TextPacket.create();
-    let wayPath = path.join(fsutil.projectPath, "/plugins/single-BDScord/mod config/waypoints.json");
-    let waypoint = JSON.parse(readFileSync(wayPath).toString());
-    if (a.length < 6) {
-        packet.message = WaypointError();
-        player.sendPacket(packet);
-        packet.dispose();
-        return;
+    const chunkpos = {
+        x: Math.trunc(player.getPosition().x / 16),
+        z: Math.trunc(player.getPosition().z / 16)
     }
-    switch (a[0].toLowerCase()) {
-        case "add": {
-            waypoint[`${a[4]}`] = {
-                formalName: `${a.splice(5).join(' ')}`,
-                Dim: `${player.getDimensionId()}`,
-                Pos: `${(a[1] === "~" ? player.getPosition().x : a[1])} ${(a[2] === "~" ? player.getPosition().y : a[2])} ${(a[3] === "~" ? player.getPosition().z : a[3])}`
-            }
-            writeFileSync(wayPath, JSON.stringify(waypoint, null, 2))
-            packet.message = "§aWaypoint was successfully added";
-            player.sendPacket(packet);
-            packet.dispose();
-            break;
-        }
-        case "remove": {
-            delete waypoint[`${a[1]}`];
-            writeFileSync(wayPath, JSON.stringify(waypoint, null, 2))
-            packet.message = "§aWaypoint was successfully removed"
-            player.sendPacket(packet);
-            packet.dispose();
-            break;
-        }
-        case "list": {
-            packet.message += "List of all waypoints:";
-            for (let waya in waypoint) {
-                switch (waypoint[waya].Dim) {
-                    case 0:
-                        packet.message += `\n§a${waypoint[waya].formalName} @ Overworld: ${waypoint[waya].Pos}§r`
-                        break;
-                    case 1:
-                        packet.message += `\n§4${waypoint[waya].formalName} @ Nether: ${waypoint[waya].Pos}§r`
-                        break;
-                    case 2:
-                        packet.message += `\n§e${waypoint[waya].formalName} @ End: ${waypoint[waya].Pos}§r`
-                        break;
-                }
-            }
-            player.sendPacket(packet);
-            packet.dispose();
-            break;
-        }
-        case "nearby": {
-            let min = [111111111, 11111111, 11111111];
-            let closestIndex: string = "";
-            for (let waya in waypoint) {
-                let a = waypoint[waya].Pos.split(" ")
-                if ((Math.abs(a[0] - player.getPosition().x) <= min[0]) && (Math.abs(a[2] - player.getPosition().z) <= min[2])) {
-                    min[0] = a[0]
-                    min[2] = a[2]
-                    closestIndex = waya;
-                }
-            }
-            packet.message += `Nearest waypoint: \n`;
-            switch (waypoint[closestIndex].Dim) {
-                case 0:
-                    packet.message += `§a${waypoint[closestIndex].formalName}:\nOverworld: ${waypoint[closestIndex].Pos}§r`
-                    break;
-                case 1:
-                    packet.message += `§4${waypoint[closestIndex].formalName}:\nNether: ${waypoint[closestIndex].Pos}§r`
-                    break;
-                case 2:
-                    packet.message += `§e${waypoint[closestIndex].formalName}:\nEnd: ${waypoint[closestIndex].Pos}§r`
-                    break;
-            }
-            player.sendPacket(packet);
-            packet.dispose();
-            break;
-        }
-        case "find": {
-            packet.message += waypoint[`${a[1]}`].formalName + ":\n";
-            switch (waypoint[`${a[1]}`].Dim) {
-                case 0:
-                    packet.message += `§aOverworld: ${waypoint[`${a[1]}`].Pos}§r`
-                    break;
-                case 1:
-                    packet.message += `§4Nether: ${waypoint[`${a[1]}`].Pos}§r`
-                    break;
-                case 2:
-                    packet.message += `§eEnd: ${waypoint[`${a[1]}`].Pos}§r`
-                    break;
-            }
-            player.sendPacket(packet);
-            packet.dispose();
-            break;
-        }
-        default: {
-            packet.message = WaypointError();
-            player.sendPacket(packet);
-            packet.dispose();
-        }
+    const mt = new MersenneTwister((chunkpos.x * 0x1f1f1f1f) ^ chunkpos.z)
+    packet.message = mt.random_int() % 10 == 0 ? `§aChunk §b[${chunkpos.x * 16} ${chunkpos.z * 16}]§a to §b[${(chunkpos.x * 16) + 16} ${(chunkpos.z * 16) + 16}]§a is a slime chunk§r` : `§cThis is not a slime chunk§r`;
+    player.sendPacket(packet)
+    packet.dispose();
+}, {});
 
-    }
-}, {
-    target: CommandRawText
-});
-
-function WaypointError() {
-    return `§4Error in Waypoint command:
-         Arguments:
-        -add <posx> <posy> <posz> <formattedName> <formalName> 
-        -remove <formattedName>
-        -nearby
-        -list§4`
-}
 
 command.register("stopall", "Stops the server").overload((p, o) => {
     let player = o.getEntity();
@@ -147,7 +46,7 @@ command.register("stopall", "Stops the server").overload((p, o) => {
 
 command.register('blame', 'Blames someone who has messed up').overload(({target}, origin) => {
     if (!origin.getEntity()?.isPlayer()) return;
-    tellAllRaw(`§2${origin.getName()}§r blamed §4 ${target.text}§r`)
+    tellAllRaw(`§2${origin.getName()}§r blamed §4${target.text}§r`)
 }, {
     target: CommandRawText
 });
@@ -202,9 +101,10 @@ command.register("vc", "Lists the people who are in vc in the server").overload(
         }
         // @ts-ignore
         for (const [memberID, member] of channel.members) {
-            packet.message += ` - ${member.user.username}\n`
+            packet.message += ` - ${member.user.tag.slice(0, member.user.tag.lastIndexOf('#'))}\n`
         }
     }
     player.sendPacket(packet);
     packet.dispose();
 }, {});
+
