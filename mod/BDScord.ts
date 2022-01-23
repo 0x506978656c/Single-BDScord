@@ -15,9 +15,7 @@ import {Config} from "./Config/config";
 import {sendHelp, sendSpecical, tellAllRaw} from "./ChatManager/MessageManager";
 // @ts-ignore
 import osu = require('node-os-utils');
-
 export const WebHook = require("webhook-discord")
-
 
 // @ts-ignore
 export const client = new Client();
@@ -58,8 +56,10 @@ client.on("message", (message) => {
         let cmd = a[0].replace(Config.bot_prefix, "");
         switch (cmd) {
             case "whitelist": {
-                if (!message.member.roles.has(Config.server_manager_roleID))
+                if (!message.member.roles.has(Config.server_manager_roleID)){
+                    sendSpecical("Error:", `You do not have the permissions to run this command`, "#9b1010", false);
                     return;
+                }
                 if (Object.values(whitelistArgs).includes(a[1])) {
                     WhitelistResponse(message.content.substr(1));
                 } else {
@@ -74,9 +74,10 @@ client.on("message", (message) => {
                 break;
             }
             case "raw": {
-                if (!message.member.roles.has(Config.server_manager_roleID))
+                if (!message.member.roles.has(Config.server_manager_roleID)) {
+                    sendSpecical("Error:", `You do not have the permissions to run this command`, "#9b1010", false);
                     return;
-                console.log(message.content.substring(4))
+                }
                 system.executeCommand(`${message.content.substring(4)}`, result => {
                     sendSpecical("Command result:", `${result.data.statusMessage}`, "#0960d0", false);
                 })
@@ -86,10 +87,6 @@ client.on("message", (message) => {
                 list()
                 break;
             }
-            /* case "fp": {
-                 fakeplayer(false, a.splice(1, a.length));
-                 break;
-             }*/
             case "help": {
                 sendHelp()
                 break;
