@@ -13,25 +13,42 @@ import {bedrockServer} from "bdsx/launcher";
 import {serverInstance} from "bdsx/bds/server";
 import {Config} from "./Config/config";
 import {sendHelp, sendSpecical, tellAllRaw} from "./ChatManager/MessageManager";
+import {attemptReconnect, fakeplayer, wsp} from "./FakePlayer/FakePlayer";
 // @ts-ignore
 import osu = require('node-os-utils');
 
 export const WebHook = require("webhook-discord")
-export const webhook = new WebHook.Webhook(Config.webhook_url)
+
 
 // @ts-ignore
 export const client = new Client();
 client.login(Config.token)
 export const system = server.registerSystem(0, 0);
 export let channel: TextChannel;
+export const webhook = new WebHook.Webhook(Config.webhook_url)
 
 export const connectionList = new Map<NetworkIdentifier, string>();
-events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier,packetId) => {
+events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier, packetId) => {
     const connreq = ptr.connreq;
     if (connreq === null) return;
     const cert = connreq.cert;
     console.log(`Connection: ${cert.getId()}>  XUID=${cert.getXuid()}, OS=${DeviceOS[connreq.getDeviceOS()] || 'UNKNOWN'}`);
     if (cert.getId()) connectionList.set(networkIdentifier, cert.getId());
+});
+
+client.on("ready", async () => {
+
+    console.log("\x1b[32m%s\x1b[0m", `[BDScord main] Info: Connected to Discord`);
+    const tmpChannel = client.channels.get(Config.channel);
+    if (!tmpChannel)
+        throw new Error("\x1b[31m[BDScord main] Error: Unable to set channel\x1b[0m");
+    channel = tmpChannel as TextChannel;
+    sendSpecical("Server Info:", "**The server has started up!**", "#31b40c", false);
+  /*  attemptReconnect().then(() => {
+        wsp.sendRequest({"type": "connect_all"}).then((response: any,err: any) => {
+            sendSpecical("Response", `${JSON.stringify(response)}`, "#10869b", false);
+        });
+    })*/
 });
 
 let whitelistArgs: string[] = ["on", "off", "add", "remove", "list"];
@@ -45,7 +62,6 @@ client.on("message", (message) => {
     } else {
         let a: string[] = message.content.split(" ");
         let cmd = a[0].replace(Config.bot_prefix, "");
-
         switch (cmd) {
             case "whitelist": {
                 if (!message.member.roles.has(Config.server_manager_roleID))
@@ -76,6 +92,10 @@ client.on("message", (message) => {
                 list()
                 break;
             }
+           /* case "fp": {
+                fakeplayer(false, a.splice(1, a.length));
+                break;
+            }*/
             case "help": {
                 sendHelp()
                 break;
@@ -138,12 +158,3 @@ function list() {
     }
     sendSpecical("Current players online:", (s === "" ? "No players are online" : s), "#0c6dcb", false);
 }
-
-client.on("ready", () => {
-    console.log('\x1b[32m', 'Connected Discord Bot\x1a');
-    const tmpChannel = client.channels.get(Config.channel);
-    if (!tmpChannel)
-        throw new Error("Can't get the channel from discord");
-    channel = tmpChannel as TextChannel;
-    sendSpecical("Server Info:", "**The server has started up!**", "#31b40c", false);
-});

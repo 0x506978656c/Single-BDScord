@@ -8,12 +8,11 @@ import {events} from "bdsx/event";
 import {MinecraftPacketIds} from "bdsx/bds/packetids";
 import {serverInstance} from "bdsx/bds/server";
 import {TextPacket} from 'bdsx/bds/packets';
-import {sendHelp, sendSpecical} from "../ChatManager/MessageManager";
+import {sendSpecical} from "../ChatManager/MessageManager";
 // @ts-ignore
 import osu = require('node-os-utils');
-import {Actor} from "bdsx/bds/actor";
 import {channel, client, connectionList, sendMessage, system, WebHook, webhook} from "../BDScord";
-import {getRuntimeEntity} from "../Hooks/hookedFunction";
+
 
 system.listenForEvent("minecraft:player_destroyed_block", (ev) => {
     if (ev.data.player.__identifier__ == "minecraft:player") {
@@ -44,24 +43,6 @@ events.networkDisconnected.on(networkIdentifier => {
         .setColor("#456789"));
 });
 
-/*
-//Took this out for now as i havent finished it yet
-events.packetBefore(MinecraftPacketIds.Interact).on((ev, networkIdentifier) => {
-    let actor: Actor = getRuntimeEntity(serverInstance.minecraft.getLevel(), ev.actorId, false);
-    serverInstance.minecraft.something
-    console.log(actor.toString())
-    //  actor.getIdentifier()
-    //  tellAllRaw(JSON.stringify(actor.toJSON()))
-    /*
-    const getRuntimeEntity = hacker.hooking('Level::getRuntimeEntity',
-        ActorRuntimeID,bool_t)(
-        (Level,ev.actorId)=>{
-            //sendText(gamemode.actor.getNetworkIdentifier(), `${item.getName()} using at ${blockpos.x} ${blockpos.y} ${blockpos.z}`);
-            return getRuntimeEntity(ev.actorId,false);
-        });
-    */
-})
-*/
 events.packetBefore(MinecraftPacketIds.Text).on((ev, networkIdentifier) => {
     if (ev.message.includes("@everyone") || ev.message.includes("@here")) {
         let packet = TextPacket.create();
@@ -102,7 +83,6 @@ system.listenForEvent("minecraft:entity_death", (ev) => {
 
 system.listenForEvent("minecraft:entity_death", (ev) => {
     try {
-
         if (ev.data.killer.__identifier__ == "minecraft:player") {
             system.executeCommand(`scoreboard players add " ${system.getComponent(ev.data.killer, "minecraft:nameable")!.data.name}" "Mobs Killed" 1`, () => {
             });
