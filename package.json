@@ -1,6 +1,6 @@
 {
   "name": "@bdsx/single-BDScord",
-  "version": "0.1.3",
+  "version": "0.3.4",
   "description": "A chat bridge and much more",
   "main": "index.js",
   "keywords": [

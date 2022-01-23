@@ -111,6 +111,10 @@ client.on("message", (message) => {
 
 });
 
+client.on("messageUpdate",(oldMessage, newMessage) => {
+    tellAllRaw(`[§9Discord§r] ${oldMessage.author.username} [Message edited]: Original: §8${oldMessage}§r  =>  ${newMessage}`);
+})
+
 export function sendMessage(content: string, playerName: string) {
     const msg = new WebHook.MessageBuilder().setName(playerName).setText(content);
     webhook.send(msg);
