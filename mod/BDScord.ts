@@ -86,10 +86,10 @@ client.on("message", (message) => {
                 list()
                 break;
             }
-           /* case "fp": {
-                fakeplayer(false, a.splice(1, a.length));
-                break;
-            }*/
+            /* case "fp": {
+                 fakeplayer(false, a.splice(1, a.length));
+                 break;
+             }*/
             case "help": {
                 sendHelp()
                 break;
@@ -126,8 +126,6 @@ function getScore(target: String, objectives: string): null | number {
     if (obj === null) return null;
     // @ts-ignore
     let id = score.getFakePlayerScoreboardId(target);
-    console.log(target)
-
     return obj.getPlayerScore(id).value;
 }
 
