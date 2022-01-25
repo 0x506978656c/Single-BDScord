@@ -33,7 +33,7 @@ export async function takeBackup() {
     const getTime = (date: Date) => {
         return addLeadingZero(date.getHours()) + addLeadingZero(date.getMinutes()) + addLeadingZero(date.getSeconds());
     };
-    const timeStamp = [now.getFullYear(), addLeadingZero(now.getMonth() + 1), addLeadingZero(now.getDate()), getTime(now)].join("-");
+    const timeStamp = [addLeadingZero(now.getDate()), addLeadingZero(now.getMonth() + 1), now.getFullYear(), getTime(now)].join("-");
     let dir = destDir + `\\${timeStamp} - ${worldName}`
     try {
         await createZipArchive(dir, destDir + "\\tmp", destDir, worldName, () => {
