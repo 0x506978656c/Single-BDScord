@@ -15,6 +15,7 @@ import {Config} from "./Config/config";
 import {sendHelp, sendSpecical, tellAllRaw} from "./ChatManager/MessageManager";
 // @ts-ignore
 import osu = require('node-os-utils');
+import {takeBackup} from "./Backup/Backup";
 export const WebHook = require("webhook-discord")
 
 // @ts-ignore
@@ -81,6 +82,10 @@ client.on("message", (message) => {
                 system.executeCommand(`${message.content.substring(4)}`, result => {
                     sendSpecical("Command result:", `${result.data.statusMessage}`, "#0960d0", false);
                 })
+                break;
+            }
+            case"backup": {
+                takeBackup()
                 break;
             }
             case "list": {

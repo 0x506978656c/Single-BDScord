@@ -13,6 +13,8 @@ import {tellAllRaw} from "../ChatManager/MessageManager";
 import {channel} from "../BDScord";
 // @ts-ignore
 import path = require("path");
+import {takeBackup} from "../Backup/Backup";
+
 const MersenneTwister = require('mersenne-twister');
 
 command.register("isslime", "Test's if the chunk that the player is standing in is a slime chunk").overload((p, o) => {
@@ -108,3 +110,6 @@ command.register("vc", "Lists the people who are in vc in the server").overload(
     packet.dispose();
 }, {});
 
+command.register("backup", "Runs a backup on the server").overload((p, o) => {
+    takeBackup()
+}, {});

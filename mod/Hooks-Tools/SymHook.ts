@@ -32,7 +32,9 @@ const symbols = [
     "AddPlayerPacket::AddPlayerPacket",
     "PistonBlockActor::ARM_ANIMATION_SPEED",
     "PistonArmBlock::canBeSilkTouched",
-    "Actor::getBlockPosCurrentlyStandingOn"
+    "Actor::getBlockPosCurrentlyStandingOn",
+    "LevelData::getLevelName",
+    "Level::getLevelData"
 ];
 
 
