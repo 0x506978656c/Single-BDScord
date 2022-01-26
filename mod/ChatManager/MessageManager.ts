@@ -74,6 +74,9 @@ export function sendHelp() {
                 }, {
                     name: "raw",
                     value: `Allows people who have the <@&${Config.server_manager_roleID}> to input and run raw commands into the server`
+                },, {
+                    name: "backup",
+                    value: `Takes backups of the server's current loaded world`
                 },
             ],
         }

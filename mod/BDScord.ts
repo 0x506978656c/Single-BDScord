@@ -57,7 +57,7 @@ client.on("message", (message) => {
         let cmd = a[0].replace(Config.bot_prefix, "");
         switch (cmd) {
             case "whitelist": {
-                if (!message.member.roles.has(Config.server_manager_roleID)){
+                if (!message.member.roles.has(Config.server_manager_roleID)) {
                     sendSpecical("Error:", `You do not have the permissions to run this command`, "#9b1010", false);
                     return;
                 }
@@ -97,13 +97,15 @@ client.on("message", (message) => {
                 break;
             }
             case "scoreboard": {
-                if (a[1] === "stats") {
-                    let objectiveNames = serverInstance.minecraft.getLevel().getScoreboard().getObjectiveNames()
-                    let s: string = "";
-                    for (let i = 0; i < objectiveNames.length; i++) {
-                        s += `\n ${objectiveNames[i]}: ${getScore(` ${a.slice(2).join(' ')}`, `${objectiveNames[i]}`)}`
-                    }
-                    sendSpecical(`Stats for ${a.slice(2).join(' ')}`, s, "#14a7e5", false);
+                switch (a[1]) {
+                    case "stats":
+                        let objectiveNames = serverInstance.minecraft.getLevel().getScoreboard().getObjectiveNames()
+                        let s: string = "";
+                        for (let i = 0; i < objectiveNames.length; i++) {
+                            s += `\n ${objectiveNames[i]}: ${getScore(` ${a.slice(2).join(' ')}`, `${objectiveNames[i]}`)}`
+                        }
+                        sendSpecical(`Stats for ${a.slice(2).join(' ')}`, s, "#14a7e5", false);
+                        break;
                 }
                 break;
             }
@@ -116,7 +118,7 @@ client.on("message", (message) => {
 
 });
 
-client.on("messageUpdate",(oldMessage, newMessage) => {
+client.on("messageUpdate", (oldMessage, newMessage) => {
     tellAllRaw(`[§9Discord§r] ${oldMessage.author.username} [Message edited]: Original: §8${oldMessage}§r  =>  ${newMessage}`);
 })
 
