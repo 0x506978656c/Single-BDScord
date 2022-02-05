@@ -1,5 +1,5 @@
 {
-  "name": "@bdsx/single-BDScord",
+  "name": "@bdsx/Single-BDScord",
   "version": "0.3.6",
   "description": "A chat bridge and much more",
   "main": "index.js",
