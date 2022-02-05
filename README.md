@@ -1,9 +1,8 @@
-# What is BDScord - 1.17.11.01
-BDScord was intended to provide a simple chat bridge that would make playing on servers more interesting and more enjoyable. Typically servers can sometimes get lonely and having a chat bridge makes it fun and entertaining. This is not just a chat bridge but it also comprises specialised tools for scoreboards and more.
+# What is BDScord - 1.18.2.03
+BDScord was intended to provide a simple chat bridge that would make playing on servers more interesting and more enjoyable. Typically, servers can sometimes get lonely and having a chat bridge makes it fun and entertaining. This is not just a chat bridge, but it also comprises specialised tools for scoreboards and more.
 
-**Images of the bridge working**
-![Image of the bridge working in game](https://cdn.discordapp.com/attachments/866631401977937940/898458410134155344/unknown.png)
-![Image of the bridge working in discord](https://cdn.discordapp.com/attachments/866631401977937940/898458426546466866/unknown.png)
+**Images of the bridge working:**\
+<img alt="Image of the bridge working in discord" height="269" src="https://cdn.discordapp.com/attachments/866631401977937940/939471360370032710/unknown.png" width="212"/>
 
 # Features
 
@@ -13,12 +12,15 @@ BDScord was intended to provide a simple chat bridge that would make playing on 
  * Server management commands in discord with whitelist commands and commands to stop the server
  * Blocks broken, Deaths and Mobs Killed counters 
  * Player leave and Join messages
- * list which players are online 
- * blame command 
+ * List which players are online 
+ * Blame command
+ * Backup command to take full server backups 
+ * VC command to list the people in vc from in game
+ * A slime chunk checker for quick checking to see if a chunk is a slime chunk
  
 # Setting up BDScord
 
-[Download for 1.17.11.01 BDSX can be found here](https://github.com/bdsx/bdsx/tree/f80d6460da423e5efa2b55105c8e070ed6f05f48)
+[Download for 1.18.2.03 BDSX can be found here](https://github.com/bdsx/bdsx/tree/707bf8afac62dc5fe5377d4fb76e3fa29e9d1315)
 
 BDScord is a plugin designed to run with [BDSX](https://github.com/bdsx/bdsx). In the technical community this can also be run in tandem with [Trapdoor](https://github.com/hhhxiao/TrapDoor), to install follow these steps:
 
@@ -32,15 +34,13 @@ BDScord is a plugin designed to run with [BDSX](https://github.com/bdsx/bdsx). I
 
 note: if you have any weird issues in game remove the example scripts line from `index.ts` `and index.js` in the main directory
 
-
 **To install BDScord:**
 
 * 1. Install the latest release of BDScord
 * 2. Drag the `Single-BDScord` file to the `plugins` folder of bdsx
-* 3. Run `npm install` inside the `Single-BDScord` to install all node dependencys
+* 3. Run `npm install` inside the `bdsx-master` directory to install all node dependencies
 * 4. Edit the config file `BDScordConfig.json` to suit your needs
 * 5. run `bdsx.bat` to start up the server
-
 
 **Note that certain objectives need to be created on first world start**
 
@@ -51,7 +51,6 @@ note: if you have any weird issues in game remove the example scripts line from 
                 => `/scoreboard objectives add "Deaths" dummy`
 
 **BDScord config file:**
-
 ```json
 {
   "server_name": "",
@@ -69,12 +68,14 @@ note: if you have any weird issues in game remove the example scripts line from 
 * Evil for introducing me to BDSX
 * BDSX
 * Stratos for the love and support
+* All the contributors and people who have used this 
 
-**Third-party libs**
-
+**Third-party libs:**
    * https://github.com/discordjs/discord.js
    * https://github.com/jb3/webhook-discord
    * https://github.com/bdsx/bdsx
-
-
-**If you need any help or support drop me a message in Stratos discord (https://discord.gg/ECXWBR2dsQ)**
+   * https://github.com/cthackers/adm-zip
+   * https://github.com/jprichardson/node-fs-extra
+   * https://github.com/DefinitelyTyped/DefinitelyTyped#readme
+   
+**If you need any help or support drop me a message in Stratos discord (https://discord.gg/ZAMjvr75X4)**

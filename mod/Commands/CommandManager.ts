@@ -14,6 +14,7 @@ import {channel} from "../BDScord";
 // @ts-ignore
 import path = require("path");
 import {takeBackup} from "../Backup/Backup";
+import {serverInstance} from "bdsx/bds/server";
 
 const MersenneTwister = require('mersenne-twister');
 
@@ -53,10 +54,6 @@ command.register('blame', 'Blames someone who has messed up').overload(({target}
     target: CommandRawText
 });
 
-/**
- * NOTE: This can only be used in 1.17.30+ as it is not implemented in api
- */
-/*
 const peer = serverInstance.networkHandler.instance.peer;
 command.register("ping", "returns the average ping").overload((p, o) => {
     let player = o.getEntity();
@@ -66,7 +63,7 @@ command.register("ping", "returns the average ping").overload((p, o) => {
     player.sendPacket(packet);
     packet.dispose();
 }, {});
- */
+
 /**
  * Returns back the position and dimension of the player
  * useful for world tours ect...
