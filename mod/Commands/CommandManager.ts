@@ -107,6 +107,6 @@ command.register("vc", "Lists the people who are in vc in the server").overload(
     packet.dispose();
 }, {});
 
-command.register("backup", "Runs a backup on the server").overload((p, o) => {
+command.register("run-backup", "Runs a backup on the server").overload((p, o) => {
     takeBackup()
 }, {});
