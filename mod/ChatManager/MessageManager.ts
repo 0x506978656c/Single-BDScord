@@ -4,33 +4,31 @@
  */
 
 // @ts-ignore
-import {channel, webhook, WebHook} from "../BDScord";
+import {channel, discordClient, webhook, WebHook, webhookClient} from "../BDScord";
 import {TextPacket} from "bdsx/bds/packets";
 import {serverInstance} from "bdsx/bds/server";
 import {Config} from "../Config/config";
+// @ts-ignore
+import {Webhook} from "discord-webhook-ts";
 
-/*
-export function sendInfo(content: string, color: string) {
-    var today = new Date();
-    const msg = new WebHook.MessageBuilder()
-        .setName(Config.server_name)
-        .setAvatar(Config.server_icon)
-        .setColor(color)
-        .setTitle(`Server Info:`)
-        .setDescription(content)
-        .setFooter(`Current time: ${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`)
-    webhook.send(msg);
-} */
 export function sendSpecical(title: string, content: string, color: string, showtime: boolean) {
-    let today = new Date();
-    const msg = new WebHook.MessageBuilder()
-        .setName(Config.server_name)
-        .setAvatar(Config.server_icon)
-        .setColor(color)
-        .setTitle(title)
-        .setDescription(content)
-        .setFooter((showtime ? `Current time: ${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}` : ``))
-    webhook.send(msg);
+    const requestBody: Webhook.input.POST =
+        {
+            username: Config.server_name,
+            avatar_url: Config.server_icon,
+            embeds: [
+                {
+                    title: title,
+                    description: content,
+                    color: parseInt(color.substr(1), 16),
+                    footer: {
+                        text: (showtime ? new Date().toLocaleString() : "")
+                    }
+                }
+            ]
+
+        }
+    discordClient.execute(requestBody);
 }
 
 export function tellAllRaw(text: string) {
@@ -74,7 +72,7 @@ export function sendHelp() {
                 }, {
                     name: "raw",
                     value: `Allows people who have the <@&${Config.server_manager_roleID}> to input and run raw commands into the server`
-                },, {
+                }, {
                     name: "backup",
                     value: `Takes backups of the server's current loaded world`
                 },

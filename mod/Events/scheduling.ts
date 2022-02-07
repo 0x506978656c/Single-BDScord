@@ -9,9 +9,9 @@ import {MinecraftPacketIds} from "bdsx/bds/packetids";
 import {serverInstance} from "bdsx/bds/server";
 import {TextPacket} from 'bdsx/bds/packets';
 import {sendSpecical} from "../ChatManager/MessageManager";
+import {channel, client, connectionList, discordClient, sendMessage, system} from "../BDScord";
 // @ts-ignore
-import osu = require('node-os-utils');
-import {channel, client, connectionList, sendMessage, system, WebHook, webhook} from "../BDScord";
+import {Webhook} from "discord-webhook-ts";
 
 
 system.listenForEvent("minecraft:player_destroyed_block", (ev) => {
@@ -28,19 +28,36 @@ events.serverClose.on(() => {
 });
 
 events.playerJoin.on((ev) => {
-    webhook.send(new WebHook.MessageBuilder()
-        .setName(ev.player.getName())
-        .setDescription(`**${ev.player.getName()} Joined the game**`)
-        .setColor("#456789"));
+    const requestBody: Webhook.input.POST =
+        {
+            username: ev.player.getName(),
+            embeds: [
+                {
+                    description: `**${ev.player.getName()} Joined the game**`,
+                    color: parseInt("#456789".substr(1), 16),
+                }
+            ]
+
+        }
+    discordClient.execute(requestBody);
+
 });
 
 events.networkDisconnected.on(networkIdentifier => {
     const id = connectionList.get(networkIdentifier);
     connectionList.delete(networkIdentifier);
-    webhook.send(new WebHook.MessageBuilder()
-        .setName(id)
-        .setDescription(`**${id} left the game**`)
-        .setColor("#456789"));
+    const requestBody: Webhook.input.POST =
+        {
+            username:id,
+            embeds: [
+                {
+                    description: `**${id} left the game**`,
+                    color: parseInt("#456789".substr(1), 16),
+                }
+            ]
+
+        }
+    discordClient.execute(requestBody);
 });
 
 events.packetBefore(MinecraftPacketIds.Text).on((ev, networkIdentifier) => {

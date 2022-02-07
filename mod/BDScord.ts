@@ -4,27 +4,25 @@
  *
  */
 
-import {Client, TextChannel} from "discord.js";
+import {Client, TextChannel, WebhookClient} from "discord.js";
 import {events} from "bdsx/event";
 import {NetworkIdentifier} from "bdsx/bds/networkidentifier";
 import {DeviceOS} from "bdsx/common";
 import {MinecraftPacketIds} from "bdsx/bds/packetids";
 import {bedrockServer} from "bdsx/launcher";
 import {serverInstance} from "bdsx/bds/server";
-import {Config} from "./Config/config";
-import {sendHelp, sendSpecical, tellAllRaw} from "./ChatManager/MessageManager";
 // @ts-ignore
-import osu = require('node-os-utils');
+import DiscordWebhook, {Webhook} from 'discord-webhook-ts';
+import {sendHelp, sendSpecical, tellAllRaw} from "./ChatManager/MessageManager";
 import {takeBackup} from "./Backup/Backup";
-export const WebHook = require("webhook-discord")
+import {Config} from "./Config/config";
 
 // @ts-ignore
 export const client = new Client();
 client.login(Config.token)
 export const system = server.registerSystem(0, 0);
 export let channel: TextChannel;
-export const webhook = new WebHook.Webhook(Config.webhook_url)
-
+export const discordClient = new DiscordWebhook(Config.webhook_url);
 export const connectionList = new Map<NetworkIdentifier, string>();
 events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier, packetId) => {
     const connreq = ptr.connreq;
@@ -35,7 +33,6 @@ events.packetAfter(MinecraftPacketIds.Login).on((ptr, networkIdentifier, packetI
 });
 
 client.on("ready", async () => {
-
     console.log("\x1b[32m%s\x1b[0m", `[BDScord main] Info: Connected to Discord`);
     const tmpChannel = client.channels.get(Config.channel);
     if (!tmpChannel)
@@ -123,8 +120,11 @@ client.on("messageUpdate", (oldMessage, newMessage) => {
 })
 
 export function sendMessage(content: string, playerName: string) {
-    const msg = new WebHook.MessageBuilder().setName(playerName).setText(content);
-    webhook.send(msg);
+    const requestBody: Webhook.input.POST = {
+        username: playerName,
+        content: content
+    }
+    discordClient.execute(requestBody);
 }
 
 function getScore(target: String, objectives: string): null | number {
