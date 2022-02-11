@@ -12,6 +12,7 @@ import {sendSpecical, tellAllRaw} from "../ChatManager/MessageManager";
 import * as fs from "fs";
 //@ts-ignore
 import {copySync, remove} from "fs-extra";
+
 const AdmZip = require("adm-zip");
 const srcDir = path.join(fsutil.projectPath, "bedrock_server\\worlds");
 const destDir = path.join(fsutil.projectPath, "Backup")
@@ -66,4 +67,3 @@ async function createZipArchive(inputDir: string, tempDir: string, outputDir: st
         });
     });
 }
- 
