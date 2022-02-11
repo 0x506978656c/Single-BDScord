@@ -4,7 +4,7 @@
  *
  */
 
-import {Client, TextChannel, WebhookClient} from "discord.js";
+import {Client, TextChannel} from "discord.js";
 import {events} from "bdsx/event";
 import {NetworkIdentifier} from "bdsx/bds/networkidentifier";
 import {DeviceOS} from "bdsx/common";
