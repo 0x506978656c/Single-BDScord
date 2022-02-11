@@ -22,6 +22,10 @@ command.register("isslime", "Test's if the chunk that the player is standing in 
     let player = o.getEntity();
     if (!player) return;
     let packet = TextPacket.create();
+    if (player.getDimensionId() !== 0) {
+        packet.message = `§cThere are no slime chunks in this dimension...§r`;
+        return;
+    }
     const chunkpos = {
         x: Math.trunc(player.getPosition().x / 16),
         z: Math.trunc(player.getPosition().z / 16)
