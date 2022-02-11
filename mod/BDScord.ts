@@ -116,6 +116,8 @@ client.on("message", (message) => {
 });
 
 client.on("messageUpdate", (oldMessage, newMessage) => {
+    if (oldMessage.channel.id !== channel.id)
+        return;
     tellAllRaw(`[§9Discord§r] ${oldMessage.author.username} [Message edited]: Original: §8${oldMessage}§r  =>  ${newMessage}`);
 })
 
